@@ -1,0 +1,41 @@
+[metadata]
+name = "J.A.R.V.I.S."
+author = "priyanshu"
+description = "Blue-gold theme inspired by Iron Man's AI"
+version = "1.0.0"
+tags = ["dark", "marvel", "gold", "classic"]
+
+[colors]
+background = "#0D0D0D"
+foreground = "#E8E8E8"
+cursor = "#00D4FF"
+selection_bg = "#FFD700"
+selection_fg = "#0D0D0D"
+
+[colors.normal]
+black = "#1A1A1A"
+red = "#AA0000"
+green = "#39FF14"
+yellow = "#FFD700"
+blue = "#00D4FF"
+magenta = "#FF00FF"
+cyan = "#00FFFF"
+white = "#E8E8E8"
+
+[colors.bright]
+black = "#4D4D4D"
+red = "#FF3333"
+green = "#7FFF00"
+yellow = "#FFE066"
+blue = "#66E0FF"
+magenta = "#FF66FF"
+cyan = "#66FFFF"
+white = "#FFFFFF"
+
+[prompt]
+icon = "⟐"
+home_symbol = "STARK"
+path_color = "#FFD700"
+git_color = "#AA0000"
+success_symbol = "❯"
+error_symbol = "❯"
