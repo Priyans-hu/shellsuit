@@ -11,6 +11,8 @@ pub struct Theme {
     pub colors: Colors,
     #[serde(default)]
     pub prompt: PromptConfig,
+    #[serde(default)]
+    pub greeting: GreetingConfig,
 }
 
 #[derive(Debug, Deserialize)]
@@ -55,6 +57,14 @@ pub struct PromptConfig {
     pub git_color: Option<HexColor>,
     pub success_symbol: Option<String>,
     pub error_symbol: Option<String>,
+}
+
+#[derive(Debug, Deserialize, Default)]
+pub struct GreetingConfig {
+    pub name: Option<String>,
+    pub address: Option<String>,
+    #[serde(default)]
+    pub quotes: Vec<String>,
 }
 
 impl Colors {
@@ -203,4 +213,84 @@ pub struct ThemeEntry {
 /// Get user themes directory path
 pub fn user_themes_dir() -> Option<PathBuf> {
     dirs::config_dir().map(|d| d.join("shellsuit").join("themes"))
+}
+
+/// Resolve a theme's raw TOML content (for cloning)
+pub fn resolve_theme_raw(name: &str) -> Result<String> {
+    if let Some(config_dir) = dirs::config_dir() {
+        let user_theme = config_dir
+            .join("shellsuit")
+            .join("themes")
+            .join(name)
+            .join("theme.toml");
+        if user_theme.exists() {
+            return std::fs::read_to_string(&user_theme)
+                .with_context(|| format!("failed to read {}", user_theme.display()));
+        }
+    }
+
+    for (builtin_name, content) in BUILTIN_THEMES {
+        if *builtin_name == name {
+            return Ok(content.to_string());
+        }
+    }
+
+    anyhow::bail!("theme '{}' not found", name);
+}
+
+/// Generate a template theme.toml for a new theme
+pub fn template_theme_toml(name: &str) -> String {
+    format!(
+        r##"[metadata]
+name = "{name}"
+author = "your-name"
+description = "A custom shellsuit theme"
+version = "1.0.0"
+tags = ["dark", "custom"]
+
+[colors]
+background = "#1A1B26"
+foreground = "#C0CAF5"
+cursor = "#C0CAF5"
+selection_bg = "#33467C"
+selection_fg = "#C0CAF5"
+
+[colors.normal]
+black = "#15161E"
+red = "#F7768E"
+green = "#9ECE6A"
+yellow = "#E0AF68"
+blue = "#7AA2F7"
+magenta = "#BB9AF7"
+cyan = "#7DCFFF"
+white = "#A9B1D6"
+
+[colors.bright]
+black = "#414868"
+red = "#F7768E"
+green = "#9ECE6A"
+yellow = "#E0AF68"
+blue = "#7AA2F7"
+magenta = "#BB9AF7"
+cyan = "#7DCFFF"
+white = "#C0CAF5"
+
+[prompt]
+# icon = "◆"
+# home_symbol = "HOME"
+# path_color = "#7AA2F7"
+# git_color = "#E0AF68"
+# success_symbol = "❯"
+# error_symbol = "✘"
+
+[greeting]
+# name = "{name}"
+# address = "user"
+# quotes = [
+#   "Ready to go.",
+#   "All systems online.",
+# ]
+"##,
+        name = name
+    )
 }
