@@ -51,3 +51,30 @@ pub fn backup_file(source: &std::path::Path, backup_name: &str) -> Result<()> {
         .with_context(|| format!("failed to backup {}", source.display()))?;
     Ok(())
 }
+
+/// List all backup files
+pub fn list_backups() -> Result<Vec<(String, u64)>> {
+    let dir = match config_dir() {
+        Ok(d) => d.join("backups"),
+        Err(_) => return Ok(Vec::new()),
+    };
+    if !dir.exists() {
+        return Ok(Vec::new());
+    }
+
+    let mut backups = Vec::new();
+    for entry in std::fs::read_dir(&dir)?.flatten() {
+        if entry.file_type().map_or(false, |ft| ft.is_file()) {
+            let name = entry.file_name().to_string_lossy().to_string();
+            let size = entry.metadata().map(|m| m.len()).unwrap_or(0);
+            backups.push((name, size));
+        }
+    }
+    backups.sort_by(|a, b| a.0.cmp(&b.0));
+    Ok(backups)
+}
+
+/// Get the path to a specific backup file
+pub fn backup_path(backup_name: &str) -> Result<PathBuf> {
+    Ok(backups_dir()?.join(backup_name))
+}
