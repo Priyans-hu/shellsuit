@@ -76,6 +76,14 @@ enum Commands {
         /// Theme name to inspect
         name: String,
     },
+    /// Import a theme from a directory or .toml file
+    Import {
+        /// Path to theme directory or .toml file
+        path: String,
+        /// Name for the imported theme (default: directory name)
+        #[arg(long)]
+        name: Option<String>,
+    },
     /// Output shell integration code
     #[command(name = "shell-init")]
     ShellInit {
@@ -102,6 +110,7 @@ fn main() {
         Commands::Greet => cmd_greet(),
         Commands::Random { tag } => cmd_random(tag.as_deref()),
         Commands::Info { name } => cmd_info(&name),
+        Commands::Import { path, name } => cmd_import(&path, name.as_deref()),
         Commands::ShellInit { shell } => cmd_shell_init(&shell),
     };
 
@@ -520,6 +529,73 @@ fn cmd_random(tag_filter: Option<&str>) -> Result<()> {
 
     println!("  Rolling the dice... \x1b[1m{}\x1b[0m!", picked.name);
     cmd_apply(&picked.name, None, false, false)
+}
+
+fn cmd_import(path: &str, name_override: Option<&str>) -> Result<()> {
+    let source = std::path::Path::new(path);
+
+    if !source.exists() {
+        bail!("path '{}' does not exist", path);
+    }
+
+    // Determine source TOML content and theme name
+    let (content, inferred_name) = if source.is_dir() {
+        let theme_file = source.join("theme.toml");
+        if !theme_file.exists() {
+            bail!(
+                "directory '{}' does not contain a theme.toml file",
+                path
+            );
+        }
+        let content = std::fs::read_to_string(&theme_file)
+            .with_context(|| format!("failed to read {}", theme_file.display()))?;
+        let dir_name = source
+            .file_name()
+            .map(|n| n.to_string_lossy().to_string())
+            .unwrap_or_else(|| "imported".to_string());
+        (content, dir_name)
+    } else {
+        // Single .toml file
+        let content = std::fs::read_to_string(source)
+            .with_context(|| format!("failed to read {}", source.display()))?;
+        let file_stem = source
+            .file_stem()
+            .map(|n| n.to_string_lossy().to_string())
+            .unwrap_or_else(|| "imported".to_string());
+        (content, file_stem)
+    };
+
+    // Validate the TOML parses as a valid theme
+    let _theme: theme::Theme = toml::from_str(&content)
+        .with_context(|| format!("'{}' is not a valid shellsuit theme", path))?;
+
+    let theme_name = name_override.unwrap_or(&inferred_name);
+    let themes_dir = theme::user_themes_dir().context("could not determine themes directory")?;
+    let dest_dir = themes_dir.join(theme_name);
+
+    if dest_dir.exists() {
+        bail!(
+            "theme '{}' already exists. Remove it first or use --name to pick a different name.",
+            theme_name
+        );
+    }
+
+    std::fs::create_dir_all(&dest_dir)
+        .with_context(|| format!("failed to create {}", dest_dir.display()))?;
+
+    let dest_file = dest_dir.join("theme.toml");
+    std::fs::write(&dest_file, &content)
+        .with_context(|| format!("failed to write {}", dest_file.display()))?;
+
+    println!();
+    println!(
+        "  \x1b[32m✓\x1b[0m Imported theme \"{}\" to {}",
+        theme_name,
+        dest_dir.display()
+    );
+    println!("  Apply with: shellsuit apply {}", theme_name);
+
+    Ok(())
 }
 
 fn cmd_shell_init(shell: &str) -> Result<()> {
