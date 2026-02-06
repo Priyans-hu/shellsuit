@@ -92,6 +92,13 @@ enum Commands {
         #[arg(long, short)]
         output: Option<String>,
     },
+    /// Compare two themes side-by-side
+    Diff {
+        /// First theme name
+        theme_a: String,
+        /// Second theme name
+        theme_b: String,
+    },
     /// Validate a theme file for correctness
     Validate {
         /// Path to a theme.toml file
@@ -125,6 +132,7 @@ fn main() {
         Commands::Info { name } => cmd_info(&name),
         Commands::Import { path, name } => cmd_import(&path, name.as_deref()),
         Commands::Export { name, output } => cmd_export(&name, output.as_deref()),
+        Commands::Diff { theme_a, theme_b } => cmd_diff(&theme_a, &theme_b),
         Commands::Validate { path } => cmd_validate(&path),
         Commands::ShellInit { shell } => cmd_shell_init(&shell),
     };
@@ -700,6 +708,62 @@ fn cmd_export(name: &str, output_dir: Option<&str>) -> Result<()> {
         dest.display()
     );
     println!("    └── theme.toml");
+
+    Ok(())
+}
+
+fn cmd_diff(name_a: &str, name_b: &str) -> Result<()> {
+    let a = theme::resolve_theme(name_a)?;
+    let b = theme::resolve_theme(name_b)?;
+
+    println!();
+    println!(
+        "  {:<30} vs  {}",
+        a.metadata.name, b.metadata.name
+    );
+    println!("  {}", "-".repeat(60));
+
+    // Helper to print a color comparison row
+    fn diff_row(label: &str, ca: &color::HexColor, cb: &color::HexColor) {
+        let same = ca.hex() == cb.hex();
+        let marker = if same { " " } else { "~" };
+        println!(
+            "  {marker} {:<14} {} {:<10}  {} {}",
+            label,
+            ca.ansi_block(),
+            ca.hex(),
+            cb.ansi_block(),
+            cb.hex(),
+        );
+    }
+
+    diff_row("background", &a.colors.background, &b.colors.background);
+    diff_row("foreground", &a.colors.foreground, &b.colors.foreground);
+    diff_row("cursor", &a.colors.cursor, &b.colors.cursor);
+    println!();
+
+    let labels = [
+        "black", "red", "green", "yellow", "blue", "magenta", "cyan", "white",
+    ];
+
+    println!("  Normal:");
+    let an = a.colors.normal_ordered();
+    let bn = b.colors.normal_ordered();
+    for (i, label) in labels.iter().enumerate() {
+        diff_row(label, an[i], bn[i]);
+    }
+
+    println!();
+    println!("  Bright:");
+    let ab = a.colors.bright_ordered();
+    let bb = b.colors.bright_ordered();
+    for (i, label) in labels.iter().enumerate() {
+        diff_row(label, ab[i], bb[i]);
+    }
+
+    println!();
+    println!("  ~ = different");
+    println!();
 
     Ok(())
 }
