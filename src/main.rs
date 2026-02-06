@@ -71,6 +71,11 @@ enum Commands {
         #[arg(long)]
         tag: Option<String>,
     },
+    /// Show detailed information about a theme
+    Info {
+        /// Theme name to inspect
+        name: String,
+    },
     /// Output shell integration code
     #[command(name = "shell-init")]
     ShellInit {
@@ -96,6 +101,7 @@ fn main() {
         Commands::Create { name, from } => cmd_create(&name, from.as_deref()),
         Commands::Greet => cmd_greet(),
         Commands::Random { tag } => cmd_random(tag.as_deref()),
+        Commands::Info { name } => cmd_info(&name),
         Commands::ShellInit { shell } => cmd_shell_init(&shell),
     };
 
@@ -276,6 +282,59 @@ fn cmd_preview(name: &str) -> Result<()> {
     print_color_swatches(&theme);
     println!();
     println!("  Apply with: shellsuit apply {}", name);
+    Ok(())
+}
+
+fn cmd_info(name: &str) -> Result<()> {
+    let theme = theme::resolve_theme(name)?;
+    let m = &theme.metadata;
+
+    println!();
+    println!("  \x1b[1m{}\x1b[0m ({})", m.name, name);
+    println!("  Author: {}", m.author);
+    println!("  Version: {}", m.version);
+    if let Some(ref desc) = m.description {
+        println!("  Description: {}", desc);
+    }
+    if !m.tags.is_empty() {
+        println!("  Tags: {}", m.tags.join(", "));
+    }
+
+    // Show prompt config if present
+    if theme.prompt.icon.is_some() || theme.prompt.success_symbol.is_some() {
+        println!();
+        println!("  Prompt:");
+        if let Some(ref icon) = theme.prompt.icon {
+            println!("    Icon: {}", icon);
+        }
+        if let Some(ref s) = theme.prompt.success_symbol {
+            println!("    Success: {}", s);
+        }
+        if let Some(ref s) = theme.prompt.error_symbol {
+            println!("    Error: {}", s);
+        }
+    }
+
+    // Show greeting config if present
+    if theme.greeting.name.is_some() || !theme.greeting.quotes.is_empty() {
+        println!();
+        println!("  Greeting:");
+        if let Some(ref n) = theme.greeting.name {
+            println!("    AI Name: {}", n);
+        }
+        if let Some(ref a) = theme.greeting.address {
+            println!("    Address: {}", a);
+        }
+        if !theme.greeting.quotes.is_empty() {
+            println!("    Quotes: {} loaded", theme.greeting.quotes.len());
+        }
+    }
+
+    // Show colors
+    println!();
+    print_color_swatches(&theme);
+    println!();
+
     Ok(())
 }
 
