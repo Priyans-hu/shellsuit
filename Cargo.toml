@@ -1,0 +1,18 @@
+[package]
+name = "shellsuit"
+version = "0.1.0"
+edition = "2021"
+description = "One command. Every layer. Your terminal, your way."
+license = "MIT"
+repository = "https://github.com/Priyans-hu/shellsuit"
+keywords = ["terminal", "theme", "starship", "ghostty", "cli"]
+categories = ["command-line-utilities"]
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+serde = { version = "1", features = ["derive"] }
+toml = "0.8"
+toml_edit = "0.22"
+anyhow = "1"
+dirs = "6"
+which = "7"
