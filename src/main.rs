@@ -104,6 +104,12 @@ enum Commands {
         #[arg(long)]
         prompt_only: bool,
     },
+    /// List or restore config backups
+    Backup {
+        /// Restore a specific backup by name
+        #[arg(long)]
+        restore: Option<String>,
+    },
     /// Compare two themes side-by-side
     Diff {
         /// First theme name
@@ -148,6 +154,7 @@ fn main() {
             terminal_only,
             prompt_only,
         } => cmd_uninstall(terminal_only, prompt_only),
+        Commands::Backup { restore } => cmd_backup(restore.as_deref()),
         Commands::Diff { theme_a, theme_b } => cmd_diff(&theme_a, &theme_b),
         Commands::Validate { path } => cmd_validate(&path),
         Commands::ShellInit { shell } => cmd_shell_init(&shell),
@@ -724,6 +731,79 @@ fn cmd_export(name: &str, output_dir: Option<&str>) -> Result<()> {
         dest.display()
     );
     println!("    └── theme.toml");
+
+    Ok(())
+}
+
+fn cmd_backup(restore_name: Option<&str>) -> Result<()> {
+    if let Some(name) = restore_name {
+        // Restore a backup
+        let backup = state::backup_path(name)?;
+        if !backup.exists() {
+            bail!(
+                "backup '{}' not found. Run `shellsuit backup` to see available backups.",
+                name
+            );
+        }
+
+        // Determine restore destination from backup name
+        let dest = match name {
+            n if n.contains("ghostty") => dirs::config_dir().map(|d| {
+                if n.contains("conf") {
+                    d.join("ghostty").join("config")
+                } else {
+                    d.join("ghostty").join("themes").join("shellsuit")
+                }
+            }),
+            n if n.contains("alacritty-conf") => {
+                dirs::config_dir().map(|d| d.join("alacritty").join("alacritty.toml"))
+            }
+            n if n.contains("alacritty-theme") => dirs::config_dir()
+                .map(|d| d.join("alacritty").join("themes").join("shellsuit.toml")),
+            n if n.contains("kitty-conf") => {
+                dirs::config_dir().map(|d| d.join("kitty").join("kitty.conf"))
+            }
+            n if n.contains("starship") => {
+                dirs::config_dir().map(|d| d.join("starship.toml"))
+            }
+            _ => None,
+        };
+
+        if let Some(dest_path) = dest {
+            std::fs::copy(&backup, &dest_path)
+                .with_context(|| format!("failed to restore {} to {}", name, dest_path.display()))?;
+            println!();
+            println!(
+                "  \x1b[32m✓\x1b[0m Restored {} -> {}",
+                name,
+                dest_path.display()
+            );
+            println!();
+        } else {
+            println!();
+            println!(
+                "  Could not determine restore path for '{}'. Manual restore:",
+                name
+            );
+            println!("    cp {} <destination>", backup.display());
+            println!();
+        }
+    } else {
+        // List backups
+        let backups = state::list_backups()?;
+        println!();
+        if backups.is_empty() {
+            println!("  No backups found. Backups are created automatically when applying themes.");
+        } else {
+            println!("  Config backups:");
+            for (name, size) in &backups {
+                println!("    {:<35} ({} bytes)", name, size);
+            }
+            println!();
+            println!("  Restore with: shellsuit backup --restore <name>");
+        }
+        println!();
+    }
 
     Ok(())
 }
