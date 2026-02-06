@@ -115,7 +115,7 @@ fn cmd_apply(
     let detected_terminal = if let Some(t) = terminal_override {
         Some(
             detect::parse_terminal(t)
-                .with_context(|| format!("unknown terminal '{}'. supported: ghostty, kitty, termux", t))?,
+                .with_context(|| format!("unknown terminal '{}'. supported: alacritty, ghostty, kitty, termux", t))?,
         )
     } else {
         detect::detect_terminal()
@@ -129,6 +129,7 @@ fn cmd_apply(
     if !prompt_only {
         if let Some(ref terminal) = detected_terminal {
             let adapter: Box<dyn Adapter> = match terminal {
+                detect::Terminal::Alacritty => Box::new(adapters::alacritty::AlacrittyAdapter),
                 detect::Terminal::Ghostty => Box::new(adapters::ghostty::GhosttyAdapter),
                 detect::Terminal::Kitty => Box::new(adapters::kitty::KittyAdapter),
                 detect::Terminal::Termux => Box::new(adapters::termux::TermuxAdapter),
