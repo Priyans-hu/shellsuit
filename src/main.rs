@@ -84,6 +84,14 @@ enum Commands {
         #[arg(long)]
         name: Option<String>,
     },
+    /// Export a theme as a standalone directory
+    Export {
+        /// Theme name to export
+        name: String,
+        /// Output directory (default: ./<theme-name>)
+        #[arg(long, short)]
+        output: Option<String>,
+    },
     /// Output shell integration code
     #[command(name = "shell-init")]
     ShellInit {
@@ -111,6 +119,7 @@ fn main() {
         Commands::Random { tag } => cmd_random(tag.as_deref()),
         Commands::Info { name } => cmd_info(&name),
         Commands::Import { path, name } => cmd_import(&path, name.as_deref()),
+        Commands::Export { name, output } => cmd_export(&name, output.as_deref()),
         Commands::ShellInit { shell } => cmd_shell_init(&shell),
     };
 
@@ -594,6 +603,42 @@ fn cmd_import(path: &str, name_override: Option<&str>) -> Result<()> {
         dest_dir.display()
     );
     println!("  Apply with: shellsuit apply {}", theme_name);
+
+    Ok(())
+}
+
+fn cmd_export(name: &str, output_dir: Option<&str>) -> Result<()> {
+    let content = theme::resolve_theme_raw(name)?;
+
+    // Validate it still parses
+    let theme: theme::Theme = toml::from_str(&content)
+        .with_context(|| format!("theme '{}' failed to parse", name))?;
+
+    let dest = output_dir
+        .map(std::path::PathBuf::from)
+        .unwrap_or_else(|| std::path::PathBuf::from(name));
+
+    if dest.exists() {
+        bail!(
+            "output directory '{}' already exists. Remove it or use --output.",
+            dest.display()
+        );
+    }
+
+    std::fs::create_dir_all(&dest)
+        .with_context(|| format!("failed to create {}", dest.display()))?;
+
+    let theme_file = dest.join("theme.toml");
+    std::fs::write(&theme_file, &content)
+        .with_context(|| format!("failed to write {}", theme_file.display()))?;
+
+    println!();
+    println!(
+        "  \x1b[32m✓\x1b[0m Exported \"{}\" to {}/",
+        theme.metadata.name,
+        dest.display()
+    );
+    println!("    └── theme.toml");
 
     Ok(())
 }
