@@ -3,6 +3,7 @@ use std::env;
 #[derive(Debug, Clone, PartialEq)]
 pub enum Terminal {
     Ghostty,
+    Kitty,
     Termux,
 }
 
@@ -15,6 +16,7 @@ impl std::fmt::Display for Terminal {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Terminal::Ghostty => write!(f, "Ghostty"),
+            Terminal::Kitty => write!(f, "Kitty"),
             Terminal::Termux => write!(f, "Termux"),
         }
     }
@@ -39,7 +41,15 @@ pub fn detect_terminal() -> Option<Terminal> {
     if let Ok(term) = env::var("TERM_PROGRAM") {
         match term.to_lowercase().as_str() {
             "ghostty" => return Some(Terminal::Ghostty),
+            "xterm-kitty" => return Some(Terminal::Kitty),
             _ => {}
+        }
+    }
+
+    // Check TERM for kitty
+    if let Ok(term) = env::var("TERM") {
+        if term == "xterm-kitty" {
+            return Some(Terminal::Kitty);
         }
     }
 
@@ -65,6 +75,7 @@ pub fn detect_prompt() -> Option<Prompt> {
 pub fn parse_terminal(name: &str) -> Option<Terminal> {
     match name.to_lowercase().as_str() {
         "ghostty" => Some(Terminal::Ghostty),
+        "kitty" => Some(Terminal::Kitty),
         "termux" => Some(Terminal::Termux),
         _ => None,
     }
