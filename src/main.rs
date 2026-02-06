@@ -294,11 +294,65 @@ fn cmd_current() -> Result<()> {
 
 fn cmd_preview(name: &str) -> Result<()> {
     let theme = theme::resolve_theme(name)?;
+    let c = &theme.colors;
     println!();
     let desc = theme.metadata.description.as_deref().unwrap_or("");
     println!("  Theme: {} — {}", theme.metadata.name, desc);
     println!();
     print_color_swatches(&theme);
+    println!();
+
+    // Simulated terminal output using theme colors
+    let bg = format!(
+        "\x1b[48;2;{};{};{}m",
+        c.background.r, c.background.g, c.background.b
+    );
+    let fg = format!(
+        "\x1b[38;2;{};{};{}m",
+        c.foreground.r, c.foreground.g, c.foreground.b
+    );
+    let green = format!(
+        "\x1b[38;2;{};{};{}m",
+        c.normal.green.r, c.normal.green.g, c.normal.green.b
+    );
+    let blue = format!(
+        "\x1b[38;2;{};{};{}m",
+        c.normal.blue.r, c.normal.blue.g, c.normal.blue.b
+    );
+    let yellow = format!(
+        "\x1b[38;2;{};{};{}m",
+        c.normal.yellow.r, c.normal.yellow.g, c.normal.yellow.b
+    );
+    let red = format!(
+        "\x1b[38;2;{};{};{}m",
+        c.normal.red.r, c.normal.red.g, c.normal.red.b
+    );
+    let cyan = format!(
+        "\x1b[38;2;{};{};{}m",
+        c.normal.cyan.r, c.normal.cyan.g, c.normal.cyan.b
+    );
+    let magenta = format!(
+        "\x1b[38;2;{};{};{}m",
+        c.normal.magenta.r, c.normal.magenta.g, c.normal.magenta.b
+    );
+    let r = "\x1b[0m";
+
+    println!("  Sample:");
+    println!(
+        "  {bg}{green}~/projects/shellsuit{r}{bg} {blue}main{r}{bg} {yellow}✦{r}{bg} {fg}${r}{bg} {cyan}cargo{r}{bg} {fg}build{r}"
+    );
+    println!(
+        "  {bg}{fg}   Compiling shellsuit v0.1.0{r}"
+    );
+    println!(
+        "  {bg}{green}    Finished{r}{bg}{fg} dev [unoptimized] in 2.1s{r}"
+    );
+    println!(
+        "  {bg}{green}~/projects/shellsuit{r}{bg} {blue}main{r}{bg} {fg}${r}{bg} {magenta}git{r}{bg} {fg}status{r}"
+    );
+    println!(
+        "  {bg}{red}M  src/main.rs{r}"
+    );
     println!();
     println!("  Apply with: shellsuit apply {}", name);
     Ok(())
