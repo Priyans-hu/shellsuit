@@ -15,11 +15,11 @@ RESET="\033[0m"
 
 THEMES=("edith" "jarvis" "friday" "catppuccin-mocha" "tokyo-night")
 THEME_LABELS=(
-  "edith            - Cyan-orange, Spider-Man's AI"
-  "jarvis           - Blue-gold, Iron Man's AI"
-  "friday           - Blue-cyan, Avengers' AI"
-  "catppuccin-mocha - Warm dark pastels"
-  "tokyo-night      - Cool blue-purple"
+  "E.D.I.T.H.       — Spider-Man's AI  (cyan-orange)"
+  "J.A.R.V.I.S.     — Iron Man's AI    (red-gold)"
+  "F.R.I.D.A.Y.     — Avengers' AI     (blue-cyan)"
+  "Catppuccin Mocha  — Warm dark pastels"
+  "Tokyo Night       — Cool blue-purple"
 )
 
 TERMINALS=("ghostty" "kitty" "alacritty" "termux")
@@ -66,8 +66,8 @@ fi
 TERMINAL="${TERMINALS[$term_idx]}"
 echo ""
 
-# ── Install terminal theme ──────────────────
-echo -e "${BOLD}Installing ${THEME} for ${TERMINAL_LABELS[$term_idx]}...${RESET}"
+# ── Install terminal colors ─────────────────
+echo -e "${BOLD}Installing ${THEME} colors for ${TERMINAL_LABELS[$term_idx]}...${RESET}"
 echo ""
 
 case "$TERMINAL" in
@@ -75,7 +75,7 @@ case "$TERMINAL" in
     DEST_DIR="${HOME}/.config/ghostty/themes"
     mkdir -p "$DEST_DIR"
     curl -fsSL "${BASE_URL}/${THEME}/ghostty" -o "${DEST_DIR}/${THEME}"
-    echo -e "  ${GREEN}✓${RESET} Downloaded to ${DEST_DIR}/${THEME}"
+    echo -e "  ${GREEN}✓${RESET} Terminal colors installed"
     echo ""
     echo -e "  ${YELLOW}Add to ~/.config/ghostty/config:${RESET}"
     echo -e "  ${DIM}theme = ${THEME}${RESET}"
@@ -84,7 +84,7 @@ case "$TERMINAL" in
     DEST_DIR="${HOME}/.config/kitty"
     mkdir -p "$DEST_DIR"
     curl -fsSL "${BASE_URL}/${THEME}/kitty-theme.conf" -o "${DEST_DIR}/current-theme.conf"
-    echo -e "  ${GREEN}✓${RESET} Downloaded to ${DEST_DIR}/current-theme.conf"
+    echo -e "  ${GREEN}✓${RESET} Terminal colors installed"
     echo ""
     if grep -q "include current-theme.conf" "${DEST_DIR}/kitty.conf" 2>/dev/null; then
       echo -e "  ${DIM}kitty.conf already includes the theme.${RESET}"
@@ -97,7 +97,7 @@ case "$TERMINAL" in
     DEST_DIR="${HOME}/.config/alacritty/themes"
     mkdir -p "$DEST_DIR"
     curl -fsSL "${BASE_URL}/${THEME}/alacritty-theme.toml" -o "${DEST_DIR}/shellsuit.toml"
-    echo -e "  ${GREEN}✓${RESET} Downloaded to ${DEST_DIR}/shellsuit.toml"
+    echo -e "  ${GREEN}✓${RESET} Terminal colors installed"
     echo ""
     if grep -q "themes/shellsuit.toml" "${HOME}/.config/alacritty/alacritty.toml" 2>/dev/null; then
       echo -e "  ${DIM}alacritty.toml already imports the theme.${RESET}"
@@ -111,7 +111,7 @@ case "$TERMINAL" in
     DEST_DIR="${HOME}/.termux"
     mkdir -p "$DEST_DIR"
     curl -fsSL "${BASE_URL}/${THEME}/termux.properties" -o "${DEST_DIR}/colors.properties"
-    echo -e "  ${GREEN}✓${RESET} Downloaded to ${DEST_DIR}/colors.properties"
+    echo -e "  ${GREEN}✓${RESET} Terminal colors installed"
     echo ""
     if command -v termux-reload-settings &>/dev/null; then
       termux-reload-settings
@@ -124,42 +124,61 @@ esac
 
 echo ""
 
-# ── Optional: Starship palette ──────────────
-read -p "  Do you use Starship prompt? [y/N]: " starship_choice
+# ── Starship prompt ─────────────────────────
+read -p "  Install Starship prompt? [y/N]: " starship_choice
 if [[ "$starship_choice" =~ ^[Yy]$ ]]; then
   STARSHIP_CONFIG="${STARSHIP_CONFIG:-${HOME}/.config/starship.toml}"
 
-  echo ""
-  echo -e "  ${BOLD}Installing Starship palette...${RESET}"
-
-  # Download palette to temp
-  PALETTE_TMP=$(mktemp)
-  curl -fsSL "${BASE_URL}/${THEME}/starship-palette.toml" -o "$PALETTE_TMP"
-
   if [[ -f "$STARSHIP_CONFIG" ]]; then
-    # Remove existing shellsuit palette if present
-    if grep -q "\[palettes.shellsuit\]" "$STARSHIP_CONFIG" 2>/dev/null; then
-      # Remove old palette section
-      sed -i.bak '/\[palettes.shellsuit\]/,/^\[/{ /^\[palettes.shellsuit\]/d; /^\[/!d; }' "$STARSHIP_CONFIG"
-      sed -i.bak '/^palette = "shellsuit"/d' "$STARSHIP_CONFIG"
+    cp "$STARSHIP_CONFIG" "${STARSHIP_CONFIG}.backup"
+    echo -e "  ${DIM}Backed up existing config to starship.toml.backup${RESET}"
+  fi
+
+  curl -fsSL "${BASE_URL}/${THEME}/starship.toml" -o "$STARSHIP_CONFIG"
+  echo -e "  ${GREEN}✓${RESET} Starship prompt installed"
+
+  if ! command -v starship &>/dev/null; then
+    echo ""
+    echo -e "  ${YELLOW}Starship not found. Install it:${RESET}"
+    echo -e "  ${DIM}curl -sS https://starship.rs/install.sh | sh${RESET}"
+    echo ""
+    echo -e "  ${YELLOW}Then add to your shell config:${RESET}"
+    echo -e "  ${DIM}eval \"\$(starship init zsh)\"   # or bash${RESET}"
+  fi
+fi
+
+echo ""
+
+# ── Shell greeting ──────────────────────────
+read -p "  Install shell greeting? [y/N]: " greeting_choice
+if [[ "$greeting_choice" =~ ^[Yy]$ ]]; then
+  GREETING_DIR="${HOME}/.config/shellsuit"
+  mkdir -p "$GREETING_DIR"
+  curl -fsSL "${BASE_URL}/${THEME}/greeting.sh" -o "${GREETING_DIR}/greeting.sh"
+  echo -e "  ${GREEN}✓${RESET} Greeting script installed"
+
+  # Detect shell config
+  SHELL_RC=""
+  if [[ "$SHELL" == *"zsh"* ]]; then
+    SHELL_RC="${HOME}/.zshrc"
+  elif [[ "$SHELL" == *"bash"* ]]; then
+    SHELL_RC="${HOME}/.bashrc"
+  fi
+
+  if [[ -n "$SHELL_RC" ]]; then
+    if grep -q "shellsuit/greeting.sh" "$SHELL_RC" 2>/dev/null; then
+      echo -e "  ${DIM}Already sourced in ${SHELL_RC}${RESET}"
+    else
+      echo "" >> "$SHELL_RC"
+      echo "# shellsuit greeting" >> "$SHELL_RC"
+      echo '[[ -f ~/.config/shellsuit/greeting.sh ]] && source ~/.config/shellsuit/greeting.sh' >> "$SHELL_RC"
+      echo -e "  ${GREEN}✓${RESET} Added to ${SHELL_RC}"
     fi
   else
-    touch "$STARSHIP_CONFIG"
+    echo ""
+    echo -e "  ${YELLOW}Add to your shell config:${RESET}"
+    echo -e "  ${DIM}source ~/.config/shellsuit/greeting.sh${RESET}"
   fi
-
-  # Add palette = "shellsuit" at top if not present
-  if ! grep -q 'palette = "shellsuit"' "$STARSHIP_CONFIG" 2>/dev/null; then
-    echo 'palette = "shellsuit"' | cat - "$STARSHIP_CONFIG" > "${STARSHIP_CONFIG}.tmp"
-    mv "${STARSHIP_CONFIG}.tmp" "$STARSHIP_CONFIG"
-  fi
-
-  # Append palette section (skip comment lines from the downloaded file)
-  echo "" >> "$STARSHIP_CONFIG"
-  grep -v "^#" "$PALETTE_TMP" | grep -v "^$" >> "$STARSHIP_CONFIG"
-
-  rm -f "$PALETTE_TMP" "${STARSHIP_CONFIG}.bak"
-
-  echo -e "  ${GREEN}✓${RESET} Starship palette added to ${STARSHIP_CONFIG}"
 fi
 
 echo ""
