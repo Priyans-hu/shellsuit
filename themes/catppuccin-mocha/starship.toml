@@ -1,0 +1,49 @@
+# =============================================================================
+# STARSHIP: Catppuccin Mocha Theme
+# Warm pastels | Soft & cozy | Minimal
+# =============================================================================
+
+add_newline = false
+command_timeout = 1000
+
+format = """
+[┌─](bold #CBA6F7)$os$directory$git_branch$git_status$cmd_duration
+[└─](bold #CBA6F7)$character"""
+
+right_format = """$time"""
+
+[os]
+format = "[](bold #CBA6F7) "
+disabled = false
+
+[os.symbols]
+Macos = ""
+
+[directory]
+style = "bold #89B4FA"
+format = "[$path]($style) "
+truncation_length = 3
+truncation_symbol = "…/"
+home_symbol = "~"
+
+[git_branch]
+symbol = " "
+style = "bold #A6E3A1"
+format = "on [$symbol$branch]($style) "
+
+[git_status]
+style = "bold #F9E2AF"
+format = '([$all_status$ahead_behind]($style))'
+
+[character]
+success_symbol = "[❯](bold #A6E3A1)"
+error_symbol = "[❯](bold #F38BA8)"
+
+[cmd_duration]
+min_time = 2000
+format = "took [$duration](bold #F9E2AF) "
+
+[time]
+disabled = false
+format = '[$time](dimmed #585B70)'
+time_format = "%H:%M"

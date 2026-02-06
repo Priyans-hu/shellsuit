@@ -1,0 +1,49 @@
+# =============================================================================
+# STARSHIP: E.D.I.T.H. Theme
+# Post-Endgame | Clean minimal | Surveillance tactical
+# =============================================================================
+
+add_newline = false
+command_timeout = 1000  # Increased from 500ms for large repos
+
+format = """
+[┌](bold #33B5E5)[─](dimmed #4A5568)$os$directory$git_branch$git_status$cmd_duration
+[└](bold #33B5E5)[─](dimmed #4A5568)$character"""
+
+right_format = """$time"""
+
+[os]
+format = "[🕷️](bold #33B5E5) "
+disabled = false
+
+[os.symbols]
+Macos = "🕷️"
+
+[directory]
+style = "bold #E6E9ED"
+format = "[$path]($style) "
+truncation_length = 3
+truncation_symbol = "…/"
+home_symbol = "PARKER"
+
+[git_branch]
+symbol = " "
+style = "bold #33B5E5"
+format = "on [$symbol$branch]($style) "
+
+[git_status]
+style = "bold #E5A033"
+format = '([$all_status$ahead_behind]($style))'
+
+[character]
+success_symbol = "[›](bold #33B5E5)"
+error_symbol = "[›](bold #E23636)"
+
+[cmd_duration]
+min_time = 2000
+format = "took [$duration](bold #E5A033) "
+
+[time]
+disabled = false
+format = '[$time](dimmed #4A5568)'
+time_format = "%H:%M"

@@ -1,0 +1,49 @@
+# =============================================================================
+# STARSHIP: J.A.R.V.I.S. Theme
+# Classic Iron Man | Red & Gold | Formal
+# =============================================================================
+
+add_newline = false
+command_timeout = 1000  # Increased from 500ms for large repos
+
+format = """
+[╭─](bold #AA0000)$os$directory$git_branch$git_status$cmd_duration
+[╰─](bold #AA0000)$character"""
+
+right_format = """$time"""
+
+[os]
+format = "[⟐](bold #00D4FF) "
+disabled = false
+
+[os.symbols]
+Macos = "⟐"
+
+[directory]
+style = "bold #FFD700"
+format = "[$path]($style) "
+truncation_length = 3
+truncation_symbol = "…/"
+home_symbol = "STARK"
+
+[git_branch]
+symbol = " "
+style = "bold #AA0000"
+format = "on [$symbol$branch]($style) "
+
+[git_status]
+style = "bold #FFD700"
+format = '([$all_status$ahead_behind]($style))'
+
+[character]
+success_symbol = "[❯](bold #00D4FF)"
+error_symbol = "[❯](bold #AA0000)"
+
+[cmd_duration]
+min_time = 2000
+format = "took [$duration](bold #FFD700) "
+
+[time]
+disabled = false
+format = '[$time](dimmed #666666)'
+time_format = "%H:%M"

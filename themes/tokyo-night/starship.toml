@@ -1,0 +1,49 @@
+# =============================================================================
+# STARSHIP: Tokyo Night Theme
+# City lights | Cool blue-purple | Clean
+# =============================================================================
+
+add_newline = false
+command_timeout = 1000
+
+format = """
+[┌─](bold #7AA2F7)$os$directory$git_branch$git_status$cmd_duration
+[└─](bold #7AA2F7)$character"""
+
+right_format = """$time"""
+
+[os]
+format = "[](bold #BB9AF7) "
+disabled = false
+
+[os.symbols]
+Macos = ""
+
+[directory]
+style = "bold #7AA2F7"
+format = "[$path]($style) "
+truncation_length = 3
+truncation_symbol = "…/"
+home_symbol = "~"
+
+[git_branch]
+symbol = " "
+style = "bold #9ECE6A"
+format = "on [$symbol$branch]($style) "
+
+[git_status]
+style = "bold #E0AF68"
+format = '([$all_status$ahead_behind]($style))'
+
+[character]
+success_symbol = "[❯](bold #9ECE6A)"
+error_symbol = "[❯](bold #F7768E)"
+
+[cmd_duration]
+min_time = 2000
+format = "took [$duration](bold #E0AF68) "
+
+[time]
+disabled = false
+format = '[$time](dimmed #414868)'
+time_format = "%H:%M"

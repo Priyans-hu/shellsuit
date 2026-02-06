@@ -1,0 +1,49 @@
+# =============================================================================
+# STARSHIP: F.R.I.D.A.Y. Theme
+# Post-Ultron | Blue-shifted | Combat tactical
+# =============================================================================
+
+add_newline = false
+command_timeout = 1000  # Increased from 500ms for large repos
+
+format = """
+[┌─](bold #0096FF)$os$directory$git_branch$git_status$cmd_duration
+[└─](bold #0096FF)$character"""
+
+right_format = """$time"""
+
+[os]
+format = "[◈](bold #00BFFF) "
+disabled = false
+
+[os.symbols]
+Macos = "◈"
+
+[directory]
+style = "bold #00BFFF"
+format = "[$path]($style) "
+truncation_length = 3
+truncation_symbol = "…/"
+home_symbol = "AVENGERS"
+
+[git_branch]
+symbol = " "
+style = "bold #0096FF"
+format = "on [$symbol$branch]($style) "
+
+[git_status]
+style = "bold #F4B728"
+format = '([$all_status$ahead_behind]($style))'
+
+[character]
+success_symbol = "[▸](bold #00BFFF)"
+error_symbol = "[▸](bold #FF5555)"
+
+[cmd_duration]
+min_time = 2000
+format = "took [$duration](bold #F4B728) "
+
+[time]
+disabled = false
+format = '[$time](dimmed #3D4556)'
+time_format = "%H:%M"
