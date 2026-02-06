@@ -161,6 +161,7 @@ pub fn list_themes() -> Result<Vec<ThemeEntry>> {
                     name: name.to_string(),
                     display_name: theme.metadata.name,
                     description: theme.metadata.description,
+                    tags: theme.metadata.tags,
                     builtin: true,
                 },
             );
@@ -185,6 +186,7 @@ pub fn list_themes() -> Result<Vec<ThemeEntry>> {
                                             name,
                                             display_name: theme.metadata.name,
                                             description: theme.metadata.description,
+                                            tags: theme.metadata.tags,
                                             builtin: false,
                                         },
                                     );
@@ -207,6 +209,7 @@ pub struct ThemeEntry {
     pub name: String,
     pub display_name: String,
     pub description: Option<String>,
+    pub tags: Vec<String>,
     pub builtin: bool,
 }
 
