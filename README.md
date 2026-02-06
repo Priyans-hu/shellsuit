@@ -1,82 +1,103 @@
 # shellsuit
 
-Pre-built terminal color themes for Ghostty, Kitty, Alacritty, Termux, and Starship. One script to install.
+Pre-built terminal themes with custom prompt and startup greeting. One command to install.
 
 ```bash
 bash <(curl -fsSL https://raw.githubusercontent.com/Priyans-hu/shellsuit/master/install.sh)
 ```
 
+## What you get
+
+- **Terminal colors** — 16 ANSI + bg/fg/cursor for Ghostty, Kitty, Alacritty, Termux
+- **Starship prompt** — Themed layout with custom icons, symbols, and colors
+- **Shell greeting** — Time-aware greeting box on every new terminal session
+
 ## Themes
 
 ### E.D.I.T.H.
-> Cyan-orange, inspired by Spider-Man's AI
-
-| | Color |
-|---|---|
-| Background | ![#0F1419](https://placehold.co/16x16/0F1419/0F1419) `#0F1419` |
-| Foreground | ![#E6E9ED](https://placehold.co/16x16/E6E9ED/E6E9ED) `#E6E9ED` |
-| Cursor | ![#33B5E5](https://placehold.co/16x16/33B5E5/33B5E5) `#33B5E5` |
+> Spider-Man's AI — cyan & orange
 
 ```
-  Normal:  #1A2332  #E23636  #7DCE82  #E5A033  #33B5E5  #A37ACC  #56C2D6  #E6E9ED
-  Bright:  #4A5568  #FF5555  #98E89E  #F5C84C  #5BC4F1  #C4A7E7  #7AD4E4  #FFFFFF
+  ╭──────────────────────────────────────────────╮
+  │  🕷️  E.D.I.T.H. v3.0                        │
+  │                                              │
+  │  Good morning, Peter.                        │
+  │  All Stark satellites online.                │
+  ╰──────────────────────────────────────────────╯
+
+  ┌─ 🕷️ PARKER/shellsuit on  main
+  └─ ›
 ```
 
 ### J.A.R.V.I.S.
-> Blue-gold, inspired by Iron Man's AI
-
-| | Color |
-|---|---|
-| Background | ![#0D0D0D](https://placehold.co/16x16/0D0D0D/0D0D0D) `#0D0D0D` |
-| Foreground | ![#E8E8E8](https://placehold.co/16x16/E8E8E8/E8E8E8) `#E8E8E8` |
-| Cursor | ![#00D4FF](https://placehold.co/16x16/00D4FF/00D4FF) `#00D4FF` |
+> Iron Man's AI — red & gold
 
 ```
-  Normal:  #1A1A1A  #AA0000  #39FF14  #FFD700  #00D4FF  #FF00FF  #00FFFF  #E8E8E8
-  Bright:  #4D4D4D  #FF3333  #7FFF00  #FFE066  #66E0FF  #FF66FF  #66FFFF  #FFFFFF
+  ╭──────────────────────────────────────────────╮
+  │  ⟐  J.A.R.V.I.S. v1.0                       │
+  │                                              │
+  │  Good morning, sir.                          │
+  │  The suit is ready when you are.             │
+  ╰──────────────────────────────────────────────╯
+
+  ╭─ ⟐ STARK/shellsuit on  main
+  ╰─ ❯
 ```
 
 ### F.R.I.D.A.Y.
-> Blue-cyan, inspired by the Avengers' AI
-
-| | Color |
-|---|---|
-| Background | ![#0A0E14](https://placehold.co/16x16/0A0E14/0A0E14) `#0A0E14` |
-| Foreground | ![#E6E6E6](https://placehold.co/16x16/E6E6E6/E6E6E6) `#E6E6E6` |
-| Cursor | ![#00BFFF](https://placehold.co/16x16/00BFFF/00BFFF) `#00BFFF` |
+> Avengers' AI — blue & cyan
 
 ```
-  Normal:  #141820  #FF5555  #50FA7B  #F4B728  #0096FF  #BD93F9  #00BFFF  #E6E6E6
-  Bright:  #3D4556  #FF6E6E  #69FF94  #FFDA45  #33AAFF  #D6ACFF  #33D6FF  #FFFFFF
+  ╭──────────────────────────────────────────────╮
+  │  ◈  F.R.I.D.A.Y. v2.0                       │
+  │                                              │
+  │  Good morning, boss.                         │
+  │  Avengers protocols loaded.                  │
+  ╰──────────────────────────────────────────────╯
+
+  ┌─ ◈ AVENGERS/shellsuit on  main
+  └─ ▸
 ```
 
 ### Catppuccin Mocha
-> Soothing pastel theme for the high-spirited
-
-| | Color |
-|---|---|
-| Background | ![#1E1E2E](https://placehold.co/16x16/1E1E2E/1E1E2E) `#1E1E2E` |
-| Foreground | ![#CDD6F4](https://placehold.co/16x16/CDD6F4/CDD6F4) `#CDD6F4` |
-| Cursor | ![#F5E0DC](https://placehold.co/16x16/F5E0DC/F5E0DC) `#F5E0DC` |
+> Warm dark pastels
 
 ```
-  Normal:  #45475A  #F38BA8  #A6E3A1  #F9E2AF  #89B4FA  #F5C2E7  #94E2D5  #BAC2DE
-  Bright:  #585B70  #F38BA8  #A6E3A1  #F9E2AF  #89B4FA  #F5C2E7  #94E2D5  #A6ADC8
+  ╭──────────────────────────────────────────────╮
+  │  ☕  catppuccin mocha                         │
+  │                                              │
+  │  Good morning.                               │
+  │  Time for something warm.                    │
+  ╰──────────────────────────────────────────────╯
+
+  ┌─  ~/shellsuit on  main
+  └─ ❯
 ```
 
 ### Tokyo Night
-> Dark theme inspired by Tokyo city lights
-
-| | Color |
-|---|---|
-| Background | ![#1A1B26](https://placehold.co/16x16/1A1B26/1A1B26) `#1A1B26` |
-| Foreground | ![#C0CAF5](https://placehold.co/16x16/C0CAF5/C0CAF5) `#C0CAF5` |
-| Cursor | ![#C0CAF5](https://placehold.co/16x16/C0CAF5/C0CAF5) `#C0CAF5` |
+> City lights — blue & purple
 
 ```
-  Normal:  #15161E  #F7768E  #9ECE6A  #E0AF68  #7AA2F7  #BB9AF7  #7DCFFF  #A9B1D6
-  Bright:  #414868  #F7768E  #9ECE6A  #E0AF68  #7AA2F7  #BB9AF7  #7DCFFF  #C0CAF5
+  ╭──────────────────────────────────────────────╮
+  │  ✦  tokyo night                              │
+  │                                              │
+  │  Good evening.                               │
+  │  City lights are on.                         │
+  ╰──────────────────────────────────────────────╯
+
+  ┌─  ~/shellsuit on  main
+  └─ ❯
 ```
+
+## Supported terminals
+
+| Terminal | Platform |
+|----------|----------|
+| [Ghostty](https://ghostty.org) | macOS, Linux |
+| [Kitty](https://sw.kovidgoyal.net/kitty/) | macOS, Linux |
+| [Alacritty](https://alacritty.org) | macOS, Linux, Windows |
+| [Termux](https://termux.dev) | Android |
+| [Starship](https://starship.rs) | Cross-platform (prompt) |
 
 ## Install
 
@@ -86,71 +107,79 @@ bash <(curl -fsSL https://raw.githubusercontent.com/Priyans-hu/shellsuit/master/
 bash <(curl -fsSL https://raw.githubusercontent.com/Priyans-hu/shellsuit/master/install.sh)
 ```
 
-Asks you which theme + terminal, downloads the config, tells you what to add.
+Picks your theme and terminal, then optionally installs the Starship prompt and shell greeting.
 
-### Manual Install
+### Manual
 
 <details>
-<summary><b>Ghostty</b></summary>
+<summary><b>Terminal colors</b></summary>
 
+**Ghostty**
 ```bash
-# Download theme (replace 'edith' with theme name)
 curl -fsSL https://raw.githubusercontent.com/Priyans-hu/shellsuit/master/themes/edith/ghostty \
   -o ~/.config/ghostty/themes/edith
 
 # Add to ~/.config/ghostty/config:
-theme = edith
+# theme = edith
 ```
-</details>
 
-<details>
-<summary><b>Kitty</b></summary>
-
+**Kitty**
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Priyans-hu/shellsuit/master/themes/edith/kitty-theme.conf \
   -o ~/.config/kitty/current-theme.conf
 
 # Add to ~/.config/kitty/kitty.conf:
-include current-theme.conf
+# include current-theme.conf
 ```
-</details>
 
-<details>
-<summary><b>Alacritty</b></summary>
-
+**Alacritty**
 ```bash
 mkdir -p ~/.config/alacritty/themes
 curl -fsSL https://raw.githubusercontent.com/Priyans-hu/shellsuit/master/themes/edith/alacritty-theme.toml \
   -o ~/.config/alacritty/themes/shellsuit.toml
 
 # Add to ~/.config/alacritty/alacritty.toml:
-[general]
-import = ["~/.config/alacritty/themes/shellsuit.toml"]
+# [general]
+# import = ["~/.config/alacritty/themes/shellsuit.toml"]
 ```
-</details>
 
-<details>
-<summary><b>Termux</b></summary>
-
+**Termux**
 ```bash
 curl -fsSL https://raw.githubusercontent.com/Priyans-hu/shellsuit/master/themes/edith/termux.properties \
-  -o ~/.termux/colors.properties
+  -o ~/.termux/colors.properties && termux-reload-settings
+```
 
-# Reload:
-termux-reload-settings
+Replace `edith` with any theme: `jarvis`, `friday`, `catppuccin-mocha`, `tokyo-night`.
+</details>
+
+<details>
+<summary><b>Starship prompt</b></summary>
+
+```bash
+# Back up existing config
+cp ~/.config/starship.toml ~/.config/starship.toml.backup 2>/dev/null
+
+# Download theme prompt
+curl -fsSL https://raw.githubusercontent.com/Priyans-hu/shellsuit/master/themes/edith/starship.toml \
+  -o ~/.config/starship.toml
+```
+
+Requires [Starship](https://starship.rs). Add to your shell config:
+```bash
+eval "$(starship init zsh)"   # or bash/fish
 ```
 </details>
 
 <details>
-<summary><b>Starship (prompt colors)</b></summary>
+<summary><b>Shell greeting</b></summary>
 
 ```bash
-# Download palette and append to starship.toml:
-curl -fsSL https://raw.githubusercontent.com/Priyans-hu/shellsuit/master/themes/edith/starship-palette.toml \
-  >> ~/.config/starship.toml
+mkdir -p ~/.config/shellsuit
+curl -fsSL https://raw.githubusercontent.com/Priyans-hu/shellsuit/master/themes/edith/greeting.sh \
+  -o ~/.config/shellsuit/greeting.sh
 
-# Add at the top of ~/.config/starship.toml:
-palette = "shellsuit"
+# Add to ~/.zshrc or ~/.bashrc:
+[[ -f ~/.config/shellsuit/greeting.sh ]] && source ~/.config/shellsuit/greeting.sh
 ```
 </details>
 
@@ -158,33 +187,23 @@ palette = "shellsuit"
 
 ```
 themes/
-  edith/
-    ghostty              # Ghostty theme file
-    kitty-theme.conf     # Kitty color config
-    alacritty-theme.toml # Alacritty color config
-    termux.properties    # Termux color properties
-    starship-palette.toml # Starship color palette
-  jarvis/
-  friday/
-  catppuccin-mocha/
-  tokyo-night/
+  edith/              — E.D.I.T.H. (Spider-Man)
+  jarvis/             — J.A.R.V.I.S. (Iron Man)
+  friday/             — F.R.I.D.A.Y. (Avengers)
+  catppuccin-mocha/   — Catppuccin Mocha
+  tokyo-night/        — Tokyo Night
+
+    ghostty             Terminal color theme
+    kitty-theme.conf    Kitty color config
+    alacritty-theme.toml  Alacritty color config
+    termux.properties   Termux color properties
+    starship.toml       Starship prompt config
+    greeting.sh         Shell greeting script
 ```
-
-Each theme has the same 16 ANSI colors + background/foreground/cursor, pre-formatted for each terminal. Same colors, different formats — because every terminal has its own config syntax.
-
-## Supported Terminals
-
-| Terminal | Platform | Config Format |
-|----------|----------|---------------|
-| [Ghostty](https://ghostty.org) | macOS, Linux | `key = value` |
-| [Kitty](https://sw.kovidgoyal.net/kitty/) | macOS, Linux | `key #hex` |
-| [Alacritty](https://alacritty.org) | macOS, Linux, Windows | TOML |
-| [Termux](https://termux.dev) | Android | Java properties |
-| [Starship](https://starship.rs) | Cross-platform (prompt) | TOML palette |
 
 ## Contributing
 
-Want to add a theme? Create a folder under `themes/` with configs for each terminal. See any existing theme for the format.
+Want to add a theme? Create a folder under `themes/` with all 6 config files. See any existing theme for the format.
 
 ## License
 
