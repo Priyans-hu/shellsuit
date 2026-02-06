@@ -1,5 +1,14 @@
 use anyhow::{Context, Result};
 use std::path::PathBuf;
+use std::sync::atomic::{AtomicBool, Ordering};
+
+/// Global flag to skip backups (set by --no-backup)
+static SKIP_BACKUPS: AtomicBool = AtomicBool::new(false);
+
+/// Set whether backups should be skipped
+pub fn set_skip_backups(skip: bool) {
+    SKIP_BACKUPS.store(skip, Ordering::Relaxed);
+}
 
 /// Get the shellsuit config directory (~/.config/shellsuit/)
 fn config_dir() -> Result<PathBuf> {
@@ -42,7 +51,11 @@ pub fn backups_dir() -> Result<PathBuf> {
 }
 
 /// Backup a file before overwriting (silent, best-effort)
+/// Respects the global SKIP_BACKUPS flag set by --no-backup
 pub fn backup_file(source: &std::path::Path, backup_name: &str) -> Result<()> {
+    if SKIP_BACKUPS.load(Ordering::Relaxed) {
+        return Ok(());
+    }
     if !source.exists() {
         return Ok(());
     }

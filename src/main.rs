@@ -178,6 +178,9 @@ fn cmd_apply(
     no_backup: bool,
     verbose: bool,
 ) -> Result<()> {
+    // Set backup preference
+    state::set_skip_backups(no_backup);
+
     // Resolve theme
     let theme = theme::resolve_theme(name)?;
     if verbose {
