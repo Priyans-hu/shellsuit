@@ -1,0 +1,39 @@
+[metadata]
+name = "Catppuccin Mocha"
+author = "catppuccin"
+description = "Soothing pastel theme for the high-spirited"
+version = "1.0.0"
+tags = ["dark", "pastel", "warm", "popular"]
+
+[colors]
+background = "#1E1E2E"
+foreground = "#CDD6F4"
+cursor = "#F5E0DC"
+selection_bg = "#585B70"
+selection_fg = "#CDD6F4"
+
+[colors.normal]
+black = "#45475A"
+red = "#F38BA8"
+green = "#A6E3A1"
+yellow = "#F9E2AF"
+blue = "#89B4FA"
+magenta = "#F5C2E7"
+cyan = "#94E2D5"
+white = "#BAC2DE"
+
+[colors.bright]
+black = "#585B70"
+red = "#F38BA8"
+green = "#A6E3A1"
+yellow = "#F9E2AF"
+blue = "#89B4FA"
+magenta = "#F5C2E7"
+cyan = "#94E2D5"
+white = "#A6ADC8"
+
+[prompt]
+path_color = "#89B4FA"
+git_color = "#F9E2AF"
+success_symbol = "❯"
+error_symbol = "✘"
