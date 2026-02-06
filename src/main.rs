@@ -13,7 +13,8 @@ use adapters::Adapter;
 #[command(
     name = "shellsuit",
     about = "One command. Every layer. Your terminal, your way.",
-    version
+    version,
+    after_help = "Examples:\n  shellsuit apply edith          Apply the E.D.I.T.H. theme\n  shellsuit list --tag dark      List dark themes\n  shellsuit preview jarvis       Preview J.A.R.V.I.S. colors\n  shellsuit create my-theme      Scaffold a new theme\n  shellsuit random               Surprise me"
 )]
 struct Cli {
     #[command(subcommand)]
@@ -23,6 +24,7 @@ struct Cli {
 #[derive(Subcommand)]
 enum Commands {
     /// Apply a theme across terminal + prompt
+    #[command(after_help = "Examples:\n  shellsuit apply edith\n  shellsuit apply jarvis --terminal ghostty\n  shellsuit apply friday --prompt-only")]
     Apply {
         /// Theme name to apply
         name: String,
@@ -56,6 +58,7 @@ enum Commands {
         name: String,
     },
     /// Create a new theme from template or existing theme
+    #[command(after_help = "Examples:\n  shellsuit create my-theme\n  shellsuit create my-dark --from catppuccin-mocha")]
     Create {
         /// Name for the new theme (lowercase, hyphens allowed)
         name: String,
