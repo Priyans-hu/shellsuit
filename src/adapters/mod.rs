@@ -1,4 +1,5 @@
 pub mod ghostty;
+pub mod kitty;
 pub mod starship;
 pub mod termux;
 
