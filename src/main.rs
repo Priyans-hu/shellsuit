@@ -40,6 +40,9 @@ enum Commands {
         /// Skip config backup
         #[arg(long)]
         no_backup: bool,
+        /// Show detailed output of what changed
+        #[arg(long, short)]
+        verbose: bool,
     },
     /// List available themes
     List {
@@ -139,8 +142,9 @@ fn main() {
             terminal,
             terminal_only,
             prompt_only,
-            no_backup: _,
-        } => cmd_apply(&name, terminal.as_deref(), terminal_only, prompt_only),
+            no_backup,
+            verbose,
+        } => cmd_apply(&name, terminal.as_deref(), terminal_only, prompt_only, no_backup, verbose),
         Commands::List { json, tag } => cmd_list(json, tag.as_deref()),
         Commands::Current => cmd_current(),
         Commands::Preview { name } => cmd_preview(&name),
@@ -171,9 +175,14 @@ fn cmd_apply(
     terminal_override: Option<&str>,
     terminal_only: bool,
     prompt_only: bool,
+    no_backup: bool,
+    verbose: bool,
 ) -> Result<()> {
     // Resolve theme
     let theme = theme::resolve_theme(name)?;
+    if verbose {
+        println!("  Resolved theme: {} ({})", theme.metadata.name, name);
+    }
 
     // Detect or override terminal
     let detected_terminal = if let Some(t) = terminal_override {
@@ -186,6 +195,26 @@ fn cmd_apply(
     };
 
     let detected_prompt = detect::detect_prompt();
+
+    if verbose {
+        println!(
+            "  Detected terminal: {}",
+            detected_terminal
+                .as_ref()
+                .map(|t| t.to_string())
+                .unwrap_or_else(|| "none".to_string())
+        );
+        println!(
+            "  Detected prompt: {}",
+            detected_prompt
+                .as_ref()
+                .map(|p| p.to_string())
+                .unwrap_or_else(|| "none".to_string())
+        );
+        if no_backup {
+            println!("  Backups: disabled");
+        }
+    }
 
     let mut applied_any = false;
 
@@ -629,7 +658,7 @@ fn cmd_random(tag_filter: Option<&str>) -> Result<()> {
     let picked = &filtered[seed % filtered.len()];
 
     println!("  Rolling the dice... \x1b[1m{}\x1b[0m!", picked.name);
-    cmd_apply(&picked.name, None, false, false)
+    cmd_apply(&picked.name, None, false, false, false, false)
 }
 
 fn cmd_import(path: &str, name_override: Option<&str>) -> Result<()> {
