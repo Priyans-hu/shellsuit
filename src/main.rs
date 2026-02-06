@@ -92,6 +92,11 @@ enum Commands {
         #[arg(long, short)]
         output: Option<String>,
     },
+    /// Validate a theme file for correctness
+    Validate {
+        /// Path to a theme.toml file
+        path: String,
+    },
     /// Output shell integration code
     #[command(name = "shell-init")]
     ShellInit {
@@ -120,6 +125,7 @@ fn main() {
         Commands::Info { name } => cmd_info(&name),
         Commands::Import { path, name } => cmd_import(&path, name.as_deref()),
         Commands::Export { name, output } => cmd_export(&name, output.as_deref()),
+        Commands::Validate { path } => cmd_validate(&path),
         Commands::ShellInit { shell } => cmd_shell_init(&shell),
     };
 
@@ -694,6 +700,58 @@ fn cmd_export(name: &str, output_dir: Option<&str>) -> Result<()> {
         dest.display()
     );
     println!("    └── theme.toml");
+
+    Ok(())
+}
+
+fn cmd_validate(path: &str) -> Result<()> {
+    let source = std::path::Path::new(path);
+
+    if !source.exists() {
+        bail!("file '{}' does not exist", path);
+    }
+
+    let content = std::fs::read_to_string(source)
+        .with_context(|| format!("failed to read {}", source.display()))?;
+
+    match toml::from_str::<theme::Theme>(&content) {
+        Ok(theme) => {
+            println!();
+            println!("  \x1b[32m✓\x1b[0m Valid theme: \"{}\"", theme.metadata.name);
+            println!("  Author: {}", theme.metadata.author);
+            println!("  Version: {}", theme.metadata.version);
+
+            // Check optional sections
+            let mut notes = Vec::new();
+            if theme.colors.bright.is_none() {
+                notes.push("no bright colors defined (will fall back to normal)");
+            }
+            if theme.colors.selection_bg.is_none() {
+                notes.push("no selection_bg defined (will fall back to cursor)");
+            }
+            if theme.prompt.icon.is_none() {
+                notes.push("no prompt icon defined");
+            }
+            if theme.greeting.quotes.is_empty() {
+                notes.push("no greeting quotes defined");
+            }
+
+            if !notes.is_empty() {
+                println!();
+                println!("  Notes:");
+                for note in &notes {
+                    println!("    \x1b[33m-\x1b[0m {}", note);
+                }
+            }
+            println!();
+        }
+        Err(e) => {
+            println!();
+            println!("  \x1b[31m✗\x1b[0m Invalid theme: {}", e);
+            println!();
+            std::process::exit(1);
+        }
+    }
 
     Ok(())
 }
