@@ -1,16 +1,17 @@
-[metadata]
-name = "Tokyo Night"
-author = "enkia"
-description = "Dark theme inspired by Tokyo city lights"
-version = "1.0.0"
-tags = ["dark", "blue", "purple", "popular"]
+# Shellsuit Theme: Tokyo Night
+# Dark theme inspired by Tokyo city lights
 
-[colors]
+[colors.primary]
 background = "#1A1B26"
 foreground = "#C0CAF5"
+
+[colors.cursor]
 cursor = "#C0CAF5"
-selection_bg = "#33467C"
-selection_fg = "#C0CAF5"
+text = "#1A1B26"
+
+[colors.selection]
+background = "#33467C"
+text = "#C0CAF5"
 
 [colors.normal]
 black = "#15161E"
@@ -31,9 +32,3 @@ blue = "#7AA2F7"
 magenta = "#BB9AF7"
 cyan = "#7DCFFF"
 white = "#C0CAF5"
-
-[prompt]
-path_color = "#7AA2F7"
-git_color = "#E0AF68"
-success_symbol = "❯"
-error_symbol = "✘"

@@ -1,0 +1,34 @@
+# Shellsuit Theme: E.D.I.T.H.
+# Cyan-orange theme inspired by Spider-Man's AI
+
+[colors.primary]
+background = "#0F1419"
+foreground = "#E6E9ED"
+
+[colors.cursor]
+cursor = "#33B5E5"
+text = "#0F1419"
+
+[colors.selection]
+background = "#33B5E5"
+text = "#0F1419"
+
+[colors.normal]
+black = "#1A2332"
+red = "#E23636"
+green = "#7DCE82"
+yellow = "#E5A033"
+blue = "#33B5E5"
+magenta = "#A37ACC"
+cyan = "#56C2D6"
+white = "#E6E9ED"
+
+[colors.bright]
+black = "#4A5568"
+red = "#FF5555"
+green = "#98E89E"
+yellow = "#F5C84C"
+blue = "#5BC4F1"
+magenta = "#C4A7E7"
+cyan = "#7AD4E4"
+white = "#FFFFFF"

@@ -1,0 +1,34 @@
+# Shellsuit Theme: F.R.I.D.A.Y.
+# Blue-cyan theme inspired by the Avengers' AI
+
+[colors.primary]
+background = "#0A0E14"
+foreground = "#E6E6E6"
+
+[colors.cursor]
+cursor = "#00BFFF"
+text = "#0A0E14"
+
+[colors.selection]
+background = "#00BFFF"
+text = "#0A0E14"
+
+[colors.normal]
+black = "#141820"
+red = "#FF5555"
+green = "#50FA7B"
+yellow = "#F4B728"
+blue = "#0096FF"
+magenta = "#BD93F9"
+cyan = "#00BFFF"
+white = "#E6E6E6"
+
+[colors.bright]
+black = "#3D4556"
+red = "#FF6E6E"
+green = "#69FF94"
+yellow = "#FFDA45"
+blue = "#33AAFF"
+magenta = "#D6ACFF"
+cyan = "#33D6FF"
+white = "#FFFFFF"
