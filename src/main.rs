@@ -44,6 +44,9 @@ enum Commands {
         /// Output as JSON
         #[arg(long)]
         json: bool,
+        /// Filter by tag (e.g., --tag dark)
+        #[arg(long)]
+        tag: Option<String>,
     },
     /// Show the currently active theme
     Current,
@@ -87,7 +90,7 @@ fn main() {
             prompt_only,
             no_backup: _,
         } => cmd_apply(&name, terminal.as_deref(), terminal_only, prompt_only),
-        Commands::List { json } => cmd_list(json),
+        Commands::List { json, tag } => cmd_list(json, tag.as_deref()),
         Commands::Current => cmd_current(),
         Commands::Preview { name } => cmd_preview(&name),
         Commands::Create { name, from } => cmd_create(&name, from.as_deref()),
@@ -179,9 +182,25 @@ fn cmd_apply(
     Ok(())
 }
 
-fn cmd_list(json: bool) -> Result<()> {
-    let themes = theme::list_themes()?;
+fn cmd_list(json: bool, tag_filter: Option<&str>) -> Result<()> {
+    let all_themes = theme::list_themes()?;
     let current = state::current_theme()?.unwrap_or_default();
+
+    // Filter by tag if requested
+    let themes: Vec<&theme::ThemeEntry> = if let Some(tag) = tag_filter {
+        all_themes
+            .iter()
+            .filter(|t| {
+                if let Ok(full) = theme::resolve_theme(&t.name) {
+                    full.metadata.tags.iter().any(|tt| tt == tag)
+                } else {
+                    false
+                }
+            })
+            .collect()
+    } else {
+        all_themes.iter().collect()
+    };
 
     if json {
         print!("[");
@@ -206,10 +225,18 @@ fn cmd_list(json: bool) -> Result<()> {
     }
 
     println!();
-    for t in &themes {
-        let marker = if t.name == current { "*" } else { " " };
-        let desc = t.description.as_deref().unwrap_or("");
-        println!("  {} {:<20} {}", marker, t.name, desc);
+    if themes.is_empty() {
+        if let Some(tag) = tag_filter {
+            println!("  No themes found with tag \"{}\".", tag);
+        } else {
+            println!("  No themes found.");
+        }
+    } else {
+        for t in &themes {
+            let marker = if t.name == current { "*" } else { " " };
+            let desc = t.description.as_deref().unwrap_or("");
+            println!("  {} {:<20} {}", marker, t.name, desc);
+        }
     }
     println!();
     if !current.is_empty() {
