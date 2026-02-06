@@ -210,17 +210,11 @@ fn cmd_list(json: bool, tag_filter: Option<&str>) -> Result<()> {
     let all_themes = theme::list_themes()?;
     let current = state::current_theme()?.unwrap_or_default();
 
-    // Filter by tag if requested
+    // Filter by tag if requested (tags are now on ThemeEntry directly)
     let themes: Vec<&theme::ThemeEntry> = if let Some(tag) = tag_filter {
         all_themes
             .iter()
-            .filter(|t| {
-                if let Ok(full) = theme::resolve_theme(&t.name) {
-                    full.metadata.tags.iter().any(|tt| tt == tag)
-                } else {
-                    false
-                }
-            })
+            .filter(|t| t.tags.iter().any(|tt| tt == tag))
             .collect()
     } else {
         all_themes.iter().collect()
@@ -232,14 +226,16 @@ fn cmd_list(json: bool, tag_filter: Option<&str>) -> Result<()> {
             if i > 0 {
                 print!(",");
             }
+            let tags_json: Vec<String> = t.tags.iter().map(|tag| format!("\"{}\"", tag)).collect();
             print!(
-                "{{\"name\":\"{}\",\"display_name\":\"{}\",\"description\":{},\"active\":{},\"builtin\":{}}}",
+                "{{\"name\":\"{}\",\"display_name\":\"{}\",\"description\":{},\"tags\":[{}],\"active\":{},\"builtin\":{}}}",
                 t.name,
                 t.display_name,
                 t.description
                     .as_ref()
                     .map(|d| format!("\"{}\"", d.replace('"', "\\\"")))
                     .unwrap_or_else(|| "null".to_string()),
+                tags_json.join(","),
                 t.name == current,
                 t.builtin,
             );
@@ -259,7 +255,12 @@ fn cmd_list(json: bool, tag_filter: Option<&str>) -> Result<()> {
         for t in &themes {
             let marker = if t.name == current { "*" } else { " " };
             let desc = t.description.as_deref().unwrap_or("");
-            println!("  {} {:<20} {}", marker, t.name, desc);
+            let tags = if t.tags.is_empty() {
+                String::new()
+            } else {
+                format!(" \x1b[90m[{}]\x1b[0m", t.tags.join(", "))
+            };
+            println!("  {} {:<20} {}{}", marker, t.name, desc, tags);
         }
     }
     println!();
