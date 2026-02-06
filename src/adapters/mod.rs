@@ -1,3 +1,4 @@
+pub mod alacritty;
 pub mod ghostty;
 pub mod kitty;
 pub mod starship;
