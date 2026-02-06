@@ -95,6 +95,15 @@ enum Commands {
         #[arg(long, short)]
         output: Option<String>,
     },
+    /// Remove shellsuit theme files and reset to defaults
+    Uninstall {
+        /// Only clean up terminal configs
+        #[arg(long)]
+        terminal_only: bool,
+        /// Only clean up prompt configs
+        #[arg(long)]
+        prompt_only: bool,
+    },
     /// Compare two themes side-by-side
     Diff {
         /// First theme name
@@ -135,6 +144,10 @@ fn main() {
         Commands::Info { name } => cmd_info(&name),
         Commands::Import { path, name } => cmd_import(&path, name.as_deref()),
         Commands::Export { name, output } => cmd_export(&name, output.as_deref()),
+        Commands::Uninstall {
+            terminal_only,
+            prompt_only,
+        } => cmd_uninstall(terminal_only, prompt_only),
         Commands::Diff { theme_a, theme_b } => cmd_diff(&theme_a, &theme_b),
         Commands::Validate { path } => cmd_validate(&path),
         Commands::ShellInit { shell } => cmd_shell_init(&shell),
@@ -711,6 +724,120 @@ fn cmd_export(name: &str, output_dir: Option<&str>) -> Result<()> {
         dest.display()
     );
     println!("    └── theme.toml");
+
+    Ok(())
+}
+
+fn cmd_uninstall(terminal_only: bool, prompt_only: bool) -> Result<()> {
+    println!();
+
+    let mut removed = Vec::new();
+
+    // Remove terminal theme files
+    if !prompt_only {
+        if let Some(config_dir) = dirs::config_dir() {
+            // Ghostty theme
+            let ghostty_themes = config_dir.join("ghostty").join("themes");
+            if ghostty_themes.exists() {
+                for entry in std::fs::read_dir(&ghostty_themes)?.flatten() {
+                    let path = entry.path();
+                    if path.is_file() {
+                        if let Ok(content) = std::fs::read_to_string(&path) {
+                            if content.contains("shellsuit") {
+                                std::fs::remove_file(&path)?;
+                                removed.push(format!("  - {}", path.display()));
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Alacritty theme
+            let alacritty_theme = config_dir
+                .join("alacritty")
+                .join("themes")
+                .join("shellsuit.toml");
+            if alacritty_theme.exists() {
+                std::fs::remove_file(&alacritty_theme)?;
+                removed.push(format!("  - {}", alacritty_theme.display()));
+            }
+
+            // Kitty theme
+            let kitty_theme = config_dir.join("kitty").join("current-theme.conf");
+            if kitty_theme.exists() {
+                if let Ok(content) = std::fs::read_to_string(&kitty_theme) {
+                    if content.contains("shellsuit") {
+                        std::fs::remove_file(&kitty_theme)?;
+                        removed.push(format!("  - {}", kitty_theme.display()));
+                    }
+                }
+            }
+        }
+
+        // Termux colors
+        if let Some(home) = dirs::home_dir() {
+            let termux_colors = home.join(".termux").join("colors.properties");
+            if termux_colors.exists() {
+                if let Ok(content) = std::fs::read_to_string(&termux_colors) {
+                    if content.contains("shellsuit") {
+                        std::fs::remove_file(&termux_colors)?;
+                        removed.push(format!("  - {}", termux_colors.display()));
+                    }
+                }
+            }
+        }
+    }
+
+    // Remove Starship palette injection
+    if !terminal_only {
+        if let Some(config_dir) = dirs::config_dir() {
+            let starship_path = config_dir.join("starship.toml");
+            if starship_path.exists() {
+                let content = std::fs::read_to_string(&starship_path)?;
+                if content.contains("[palettes.shellsuit]") {
+                    // Remove the shellsuit palette section
+                    let mut lines: Vec<&str> = content.lines().collect();
+                    let mut in_section = false;
+                    lines.retain(|line| {
+                        if *line == "[palettes.shellsuit]" {
+                            in_section = true;
+                            return false;
+                        }
+                        if in_section {
+                            if line.starts_with('[') {
+                                in_section = false;
+                                return true;
+                            }
+                            return false;
+                        }
+                        true
+                    });
+                    // Also remove palette_name line referencing shellsuit
+                    let cleaned: Vec<&str> = lines
+                        .into_iter()
+                        .filter(|l| !l.contains("palette = \"shellsuit\""))
+                        .collect();
+                    std::fs::write(&starship_path, cleaned.join("\n"))?;
+                    removed.push(format!("  - {} (palette removed)", starship_path.display()));
+                }
+            }
+        }
+    }
+
+    // Clear active theme state
+    if let Err(_) = state::set_current_theme("") {
+        // Ignore — state file may not exist
+    }
+
+    if removed.is_empty() {
+        println!("  No shellsuit files found to remove.");
+    } else {
+        println!("  \x1b[32m✓\x1b[0m Cleaned up {} file(s):", removed.len());
+        for r in &removed {
+            println!("{}", r);
+        }
+    }
+    println!();
 
     Ok(())
 }
