@@ -39,3 +39,16 @@ path_color = "#00BFFF"
 git_color = "#F4B728"
 success_symbol = "▸"
 error_symbol = "▸"
+
+[greeting]
+name = "F.R.I.D.A.Y."
+address = "boss"
+quotes = [
+    "All systems nominal, boss.",
+    "Combat systems standing by.",
+    "I've got your back, boss.",
+    "Threat assessment complete.",
+    "Ready for tactical deployment.",
+    "Avengers protocols loaded.",
+    "Scans are clean. Let's go.",
+]
