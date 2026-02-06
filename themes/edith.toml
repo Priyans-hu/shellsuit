@@ -39,3 +39,16 @@ path_color = "#33B5E5"
 git_color = "#E5A033"
 success_symbol = "›"
 error_symbol = "›"
+
+[greeting]
+name = "E.D.I.T.H."
+address = "Peter"
+quotes = [
+    "Welcome back, Peter.",
+    "Scanning environment... All clear.",
+    "Surveillance systems active.",
+    "All Stark satellites online.",
+    "How can I help today?",
+    "I'm here if you need me.",
+    "Defense protocols ready.",
+]
