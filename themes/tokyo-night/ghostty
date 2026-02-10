@@ -23,3 +23,7 @@ palette = 12=#7AA2F7
 palette = 13=#BB9AF7
 palette = 14=#7DCFFF
 palette = 15=#C0CAF5
+
+# Split pane settings
+unfocused-split-opacity = 0.8
+split-divider-color = #414868
