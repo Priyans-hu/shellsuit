@@ -45,7 +45,7 @@ done
 # ── Test 3: Source helpers, test detect_os ──
 echo "3. Testing detect_os..."
 # Source everything up to but not including the main flow
-eval "$(sed -n '/^# ── Colors/,/^# ── Main/p' install.sh | head -n -1)" 2>/dev/null || true
+eval "$(sed -n '/^# ── Colors/,/^# ── Main/p' install.sh | sed '$d')" 2>/dev/null || true
 
 detect_os
 if [[ "$OS_TYPE" =~ ^(macos|linux|wsl|termux)$ ]]; then
