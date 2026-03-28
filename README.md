@@ -1,6 +1,6 @@
 # shellsuit
 
-Pre-built terminal themes with custom prompt and startup greeting. One command to install.
+Pre-built terminal themes with custom prompt, Nerd Font, shell plugins, and startup greeting. One command to set up the same terminal experience on macOS and Windows/WSL.
 
 ```bash
 bash <(curl -fsSL https://raw.githubusercontent.com/Priyans-hu/shellsuit/master/install.sh)
@@ -9,8 +9,10 @@ bash <(curl -fsSL https://raw.githubusercontent.com/Priyans-hu/shellsuit/master/
 ## What you get
 
 - **Terminal colors** — 16 ANSI + bg/fg/cursor for Ghostty, Kitty, Alacritty, Termux, Windows Terminal
+- **Nerd Font** — Optional install of JetBrains Mono, FiraCode, Hack, or MesloLG Nerd Font
 - **Starship prompt** — Themed layout with custom icons, symbols, and colors
 - **Shell greeting** — Time-aware greeting box on every new terminal session
+- **Shell plugins** — zsh-syntax-highlighting and zsh-autosuggestions (zsh only)
 
 ## Themes
 
@@ -108,7 +110,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/Priyans-hu/shellsuit/master/
 bash <(curl -fsSL https://raw.githubusercontent.com/Priyans-hu/shellsuit/master/install.sh)
 ```
 
-Picks your theme and terminal, then optionally installs the Starship prompt and shell greeting.
+Picks your theme and terminal, then optionally installs Nerd Font, Starship prompt, shell greeting, and zsh plugins.
 
 ### Manual
 
@@ -170,6 +172,40 @@ Replace `edith` with any theme. Scheme names: `ShellSuit - E.D.I.T.H.`, `ShellSu
 </details>
 
 <details>
+<summary><b>Nerd Font</b></summary>
+
+A Nerd Font is needed for Starship prompt icons to render correctly.
+
+**macOS (Homebrew)**
+```bash
+brew install --cask font-jetbrains-mono-nerd-font
+```
+
+**Linux / WSL**
+```bash
+mkdir -p ~/.local/share/fonts
+curl -fSL https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip \
+  -o /tmp/JetBrainsMono.zip
+unzip -o -q /tmp/JetBrainsMono.zip -d ~/.local/share/fonts '*.ttf'
+fc-cache -fv
+rm /tmp/JetBrainsMono.zip
+```
+
+**WSL + Windows Terminal:** Also install the font on Windows (right-click `.ttf` → Install for all users), since Windows Terminal uses Windows-side fonts.
+
+**Termux**
+```bash
+curl -fSL https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip \
+  -o /tmp/JetBrainsMono.zip
+unzip -o -q /tmp/JetBrainsMono.zip -d /tmp/nerdfonts
+cp /tmp/nerdfonts/*Regular*.ttf ~/.termux/font.ttf
+termux-reload-settings
+```
+
+Other fonts: Replace `JetBrainsMono` with `FiraCode`, `Hack`, or `Meslo`.
+</details>
+
+<details>
 <summary><b>Starship prompt</b></summary>
 
 ```bash
@@ -197,6 +233,32 @@ curl -fsSL https://raw.githubusercontent.com/Priyans-hu/shellsuit/master/themes/
 
 # Add to ~/.zshrc or ~/.bashrc:
 [[ -f ~/.config/shellsuit/greeting.sh ]] && source ~/.config/shellsuit/greeting.sh
+```
+</details>
+
+<details>
+<summary><b>Shell plugins (zsh)</b></summary>
+
+**macOS (Homebrew)**
+```bash
+brew install zsh-syntax-highlighting zsh-autosuggestions
+
+# Add to ~/.zshrc:
+source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+```
+
+**Linux / WSL**
+```bash
+mkdir -p ~/.config/shellsuit/plugins
+git clone --depth 1 https://github.com/zsh-users/zsh-syntax-highlighting.git \
+  ~/.config/shellsuit/plugins/zsh-syntax-highlighting
+git clone --depth 1 https://github.com/zsh-users/zsh-autosuggestions.git \
+  ~/.config/shellsuit/plugins/zsh-autosuggestions
+
+# Add to ~/.zshrc:
+source ~/.config/shellsuit/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source ~/.config/shellsuit/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 ```
 </details>
 
