@@ -159,6 +159,20 @@ done
 CURL
 chmod +x "$MOCK_BIN/curl"
 
+# Mock unzip: just succeed (font zip is empty in mock)
+cat > "$MOCK_BIN/unzip" << 'UNZIP'
+#!/usr/bin/env bash
+exit 0
+UNZIP
+chmod +x "$MOCK_BIN/unzip"
+
+# Mock fc-cache: no-op
+cat > "$MOCK_BIN/fc-cache" << 'FCCACHE'
+#!/usr/bin/env bash
+exit 0
+FCCACHE
+chmod +x "$MOCK_BIN/fc-cache"
+
 run_installer() {
   # $1 = input string, $2 = SHELL override
   local input="$1" shell_val="${2:-/bin/zsh}"
