@@ -22,12 +22,13 @@ THEME_LABELS=(
   "Tokyo Night       — Cool blue-purple"
 )
 
-TERMINALS=("ghostty" "kitty" "alacritty" "termux")
+TERMINALS=("ghostty" "kitty" "alacritty" "termux" "windows-terminal")
 TERMINAL_LABELS=(
   "Ghostty"
   "Kitty"
   "Alacritty"
   "Termux"
+  "Windows Terminal (WSL)"
 )
 
 echo ""
@@ -56,6 +57,11 @@ echo ""
 for i in "${!TERMINAL_LABELS[@]}"; do
   echo -e "  ${BOLD}$((i+1)))${RESET} ${TERMINAL_LABELS[$i]}"
 done
+# Hint if running inside WSL
+if [[ -n "$WSL_DISTRO_NAME" ]] || grep -qi microsoft /proc/version 2>/dev/null; then
+  echo ""
+  echo -e "  ${DIM}(WSL detected — option 5 recommended)${RESET}"
+fi
 echo ""
 read -p "  Choice [1-${#TERMINALS[@]}]: " term_choice
 term_idx=$((term_choice - 1))
@@ -119,6 +125,73 @@ case "$TERMINAL" in
     else
       echo -e "  ${YELLOW}Restart Termux to see changes.${RESET}"
     fi
+    ;;
+  windows-terminal)
+    # Map theme slug to scheme name
+    case "$THEME" in
+      edith)            SCHEME_NAME="ShellSuit - E.D.I.T.H." ;;
+      jarvis)           SCHEME_NAME="ShellSuit - J.A.R.V.I.S." ;;
+      friday)           SCHEME_NAME="ShellSuit - F.R.I.D.A.Y." ;;
+      catppuccin-mocha) SCHEME_NAME="ShellSuit - Catppuccin Mocha" ;;
+      tokyo-night)      SCHEME_NAME="ShellSuit - Tokyo Night" ;;
+    esac
+
+    # Download the scheme file
+    SCHEME_FILE="/tmp/shellsuit-wt-scheme.json"
+    curl -fsSL "${BASE_URL}/${THEME}/windows-terminal.json" -o "$SCHEME_FILE"
+
+    # Try to find Windows Terminal settings.json
+    WT_SETTINGS=""
+    if [[ -d "/mnt/c" ]]; then
+      for win_user_dir in /mnt/c/Users/*/; do
+        for pkg in "Microsoft.WindowsTerminal_8wekyb3d8bbwe" "Microsoft.WindowsTerminalPreview_8wekyb3d8bbwe"; do
+          candidate="${win_user_dir}AppData/Local/Packages/${pkg}/LocalState/settings.json"
+          if [[ -f "$candidate" ]]; then
+            WT_SETTINGS="$candidate"
+            break 2
+          fi
+        done
+      done
+    fi
+
+    INJECTED=false
+    if [[ -n "$WT_SETTINGS" ]] && command -v jq &>/dev/null; then
+      echo -e "  ${GREEN}Found:${RESET} ${DIM}${WT_SETTINGS}${RESET}"
+      echo ""
+      read -p "  Auto-add scheme to settings.json? [y/N]: " inject_choice
+      if [[ "$inject_choice" =~ ^[Yy]$ ]]; then
+        cp "$WT_SETTINGS" "${WT_SETTINGS}.shellsuit-backup"
+        echo -e "  ${DIM}Backed up to settings.json.shellsuit-backup${RESET}"
+
+        if UPDATED=$(jq --argjson scheme "$(cat "$SCHEME_FILE")" \
+          '(.schemes // []) |= (map(select(.name != $scheme.name)) + [$scheme])' \
+          "$WT_SETTINGS" 2>/dev/null); then
+          echo "$UPDATED" > "$WT_SETTINGS"
+          echo -e "  ${GREEN}✓${RESET} Color scheme added to settings.json"
+          INJECTED=true
+        else
+          echo -e "  ${YELLOW}Could not parse settings.json automatically.${RESET}"
+        fi
+      fi
+    fi
+
+    if [[ "$INJECTED" = false ]]; then
+      LOCAL_DIR="${HOME}/.config/shellsuit"
+      mkdir -p "$LOCAL_DIR"
+      cp "$SCHEME_FILE" "${LOCAL_DIR}/windows-terminal.json"
+      echo -e "  ${GREEN}✓${RESET} Scheme saved to ~/.config/shellsuit/windows-terminal.json"
+      echo ""
+      echo -e "  ${YELLOW}To install manually:${RESET}"
+      echo -e "  ${DIM}1. Open Windows Terminal Settings (Ctrl+Shift+,)${RESET}"
+      echo -e "  ${DIM}2. In the JSON, find the \"schemes\" array${RESET}"
+      echo -e "  ${DIM}3. Paste the contents of windows-terminal.json${RESET}"
+    fi
+
+    rm -f "$SCHEME_FILE"
+
+    echo ""
+    echo -e "  ${YELLOW}Then set in your WSL profile:${RESET}"
+    echo -e "  ${DIM}\"colorScheme\": \"${SCHEME_NAME}\"${RESET}"
     ;;
 esac
 

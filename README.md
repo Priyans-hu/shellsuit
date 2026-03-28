@@ -8,7 +8,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/Priyans-hu/shellsuit/master/
 
 ## What you get
 
-- **Terminal colors** — 16 ANSI + bg/fg/cursor for Ghostty, Kitty, Alacritty, Termux
+- **Terminal colors** — 16 ANSI + bg/fg/cursor for Ghostty, Kitty, Alacritty, Termux, Windows Terminal
 - **Starship prompt** — Themed layout with custom icons, symbols, and colors
 - **Shell greeting** — Time-aware greeting box on every new terminal session
 
@@ -97,6 +97,7 @@ bash <(curl -fsSL https://raw.githubusercontent.com/Priyans-hu/shellsuit/master/
 | [Kitty](https://sw.kovidgoyal.net/kitty/) | macOS, Linux |
 | [Alacritty](https://alacritty.org) | macOS, Linux, Windows |
 | [Termux](https://termux.dev) | Android |
+| [Windows Terminal](https://aka.ms/terminal) | Windows (via WSL) |
 | [Starship](https://starship.rs) | Cross-platform (prompt) |
 
 ## Install
@@ -153,6 +154,22 @@ Replace `edith` with any theme: `jarvis`, `friday`, `catppuccin-mocha`, `tokyo-n
 </details>
 
 <details>
+<summary><b>Windows Terminal (WSL)</b></summary>
+
+```bash
+# From inside WSL — view the scheme JSON:
+curl -fsSL https://raw.githubusercontent.com/Priyans-hu/shellsuit/master/themes/edith/windows-terminal.json
+```
+
+Then:
+1. Open Windows Terminal Settings → Open JSON file (`Ctrl+Shift+,`)
+2. Add the JSON object to the `"schemes"` array
+3. In your WSL profile, set: `"colorScheme": "ShellSuit - E.D.I.T.H."`
+
+Replace `edith` with any theme. Scheme names: `ShellSuit - E.D.I.T.H.`, `ShellSuit - J.A.R.V.I.S.`, `ShellSuit - F.R.I.D.A.Y.`, `ShellSuit - Catppuccin Mocha`, `ShellSuit - Tokyo Night`.
+</details>
+
+<details>
 <summary><b>Starship prompt</b></summary>
 
 ```bash
@@ -198,12 +215,13 @@ themes/
     alacritty-theme.toml  Alacritty color config
     termux.properties   Termux color properties
     starship.toml       Starship prompt config
-    greeting.sh         Shell greeting script
+    greeting.sh           Shell greeting script
+    windows-terminal.json Windows Terminal color scheme
 ```
 
 ## Contributing
 
-Want to add a theme? Create a folder under `themes/` with all 6 config files. See any existing theme for the format.
+Want to add a theme? Create a folder under `themes/` with all 7 config files. See any existing theme for the format.
 
 ## License
 

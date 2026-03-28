@@ -1,0 +1,23 @@
+{
+  "name": "ShellSuit - E.D.I.T.H.",
+  "background": "#0F1419",
+  "foreground": "#E6E9ED",
+  "cursorColor": "#33B5E5",
+  "selectionBackground": "#33B5E5",
+  "black": "#1A2332",
+  "red": "#E23636",
+  "green": "#7DCE82",
+  "yellow": "#E5A033",
+  "blue": "#33B5E5",
+  "purple": "#A37ACC",
+  "cyan": "#56C2D6",
+  "white": "#E6E9ED",
+  "brightBlack": "#4A5568",
+  "brightRed": "#FF5555",
+  "brightGreen": "#98E89E",
+  "brightYellow": "#F5C84C",
+  "brightBlue": "#5BC4F1",
+  "brightPurple": "#C4A7E7",
+  "brightCyan": "#7AD4E4",
+  "brightWhite": "#FFFFFF"
+}

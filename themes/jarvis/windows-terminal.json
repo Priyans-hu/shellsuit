@@ -1,0 +1,23 @@
+{
+  "name": "ShellSuit - J.A.R.V.I.S.",
+  "background": "#0D0D0D",
+  "foreground": "#E8E8E8",
+  "cursorColor": "#00D4FF",
+  "selectionBackground": "#FFD700",
+  "black": "#1A1A1A",
+  "red": "#AA0000",
+  "green": "#39FF14",
+  "yellow": "#FFD700",
+  "blue": "#00D4FF",
+  "purple": "#FF00FF",
+  "cyan": "#00FFFF",
+  "white": "#E8E8E8",
+  "brightBlack": "#4D4D4D",
+  "brightRed": "#FF3333",
+  "brightGreen": "#7FFF00",
+  "brightYellow": "#FFE066",
+  "brightBlue": "#66E0FF",
+  "brightPurple": "#FF66FF",
+  "brightCyan": "#66FFFF",
+  "brightWhite": "#FFFFFF"
+}

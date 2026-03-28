@@ -1,0 +1,23 @@
+{
+  "name": "ShellSuit - F.R.I.D.A.Y.",
+  "background": "#0A0E14",
+  "foreground": "#E6E6E6",
+  "cursorColor": "#00BFFF",
+  "selectionBackground": "#00BFFF",
+  "black": "#141820",
+  "red": "#FF5555",
+  "green": "#50FA7B",
+  "yellow": "#F4B728",
+  "blue": "#0096FF",
+  "purple": "#BD93F9",
+  "cyan": "#00BFFF",
+  "white": "#E6E6E6",
+  "brightBlack": "#3D4556",
+  "brightRed": "#FF6E6E",
+  "brightGreen": "#69FF94",
+  "brightYellow": "#FFDA45",
+  "brightBlue": "#33AAFF",
+  "brightPurple": "#D6ACFF",
+  "brightCyan": "#33D6FF",
+  "brightWhite": "#FFFFFF"
+}
