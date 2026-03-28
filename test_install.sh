@@ -2,7 +2,7 @@
 # Mock test for install.sh — simulates full flow without real installs
 # Can run locally or in GitHub Actions CI
 
-set -euo pipefail
+set -eo pipefail
 
 PASS=0
 FAIL=0

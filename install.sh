@@ -66,9 +66,9 @@ SUMMARY=()
 detect_os() {
   if [[ "$(uname)" == "Darwin" ]]; then
     OS_TYPE="macos"
-  elif [[ -n "$TERMUX_VERSION" ]]; then
+  elif [[ -n "${TERMUX_VERSION:-}" ]]; then
     OS_TYPE="termux"
-  elif [[ -n "$WSL_DISTRO_NAME" ]] || grep -qi microsoft /proc/version 2>/dev/null; then
+  elif [[ -n "${WSL_DISTRO_NAME:-}" ]] || grep -qi microsoft /proc/version 2>/dev/null; then
     OS_TYPE="wsl"
   else
     OS_TYPE="linux"
